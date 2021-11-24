@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<!--  Extends the Base file and includes all the code for outputing all tasks  -->
+<h2 class="page-title">{{page_title}}</h2>
+<p class="group_code_hint">Join Code: {{join_code}}</p>
+
+<!--  If there are tasks to display  -->
+{% if tasks %}
+
+<!--  Creates a list of tasks using a loop to display each task using their data in a template  -->
+<ul class="tasks-list">
+    {% for task in tasks %}
+    {% if task.complete == False%}
+    <li class="task task-incomplete">
+    {% else %}
+    <li class="task task-complete">
+    {% endif %}
+        <p class="task-name">{{ task.title }}</p>
+        <button class="task-button drop-task" data-bs-toggle="modal" data-bs-target='#overview-{{ task.id }}'>
+            <i class="fa fa-caret-down"></i>
+        </button>
+        {% if task.complete == False%}
+        <form action="/mark_complete" method="GET">
+            <input type="hidden" name="id" value="{{ task.id }}">
+            <input type="hidden" name="current_page" value="{{ret}}">
+            <button class="task-button complete-task">
+                <i class="fa fa-check"></i>
+            </button>
+        </form>
+        {% endif %}
+        <form action="/delete" method="GET">
+            <input type="hidden" name="id" value="{{ task.id }}">
+            <input type="hidden" name="current_page" value="{{ret}}">
+            <button class="task-button delete-task">
+                <i class="fa fa-trash"></i>
+            </button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+<!--  Creates each tasks modal popup using a loop to display each task using their data in a template  -->
+{% for task in tasks %}
+    <div class="modal fade" id="overview-{{ task.id }}" tabindex="-1" aria-labelledby="overview-{{ task.id }}" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">{{ task.title }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>Title: {{ task.title }}</p>
+            <p>Due Date: {{ task.deadline }}</p>
+            <p>Complete: {{ task.complete }}</p>
+            <p>Description: <br>{{ task.description }}</p>
+        </div>
+        <div class="modal-footer">
+            <form action="/delete" method="GET">
+                <input type="hidden" name="id" value="{{ task.id }}">
+                <input type="hidden" name="current_page" value="{{ret}}">
+                <button class="btn btn-secondary">Delete</button>
+            </form>
+            {% if task.complete == False %}
+            <form action="/mark_complete" method="GET">
+              <input type="hidden" name="id" value="{{ task.id }}">
+              <input type="hidden" name="current_page" value="{{ret}}">
+              <button class="btn btn-primary">Complete</button>
+            </form>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    </div>
+{% endfor %}
+
+{% else %}
+<!--  If there are no tasks it tell the user in an alert  -->
+<div class="alert alert-danger">
+    {{alert}}
+</div>
+{% endif %}
+
+{% endblock %}

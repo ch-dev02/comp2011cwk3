@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="page-title">Join A Group</h2>
+
+<form class="create-form" method="POST" action="#">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    <label for="code" class="form-label">Secret Group Code</label>
+    {{ form.code(class_="form-control") }}
+  </div>
+  {% if form.code.errors %}
+    <ul class="errors">
+      {% for error in form.code.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

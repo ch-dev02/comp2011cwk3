@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<!--  Extends the Base file and includes all the code for outputing all tasks  -->
+<h2 class="page-title">{{page_title}}</h2>
+
+<form action="/change_pwd" method="POST" id="change-pwd-form">
+    <div class="mb-3">
+        <label for="old_password" class="form-label">Old Password</label>
+        <input type="password" class="form-control" id="old_password" name="old_password" placeholder="Old Password">
+    </div>
+    <div class="mb-3">
+        <label for="new_password" class="form-label">New Password</label>
+        <input type="password" class="form-control" id="new_password" name="new_password" placeholder="New Password">
+    </div>
+    <button type="submit" class="btn btn-primary" id="change-pwd-btn">Change Password</button>
+</form>
+<p id="profile-logout"><a href="/logout" id="profile-logout-btn">Logout</a></p>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<!--  Extends the Base file and includes all the code for outputing all tasks  -->
+<h2 class="page-title">{{page_title}}</h2>
+
+<!--  If there are tasks to display  -->
+{% if groups %}
+<ul class="tasks-list">
+    {% for group in groups %}
+    <li class="task task-clear">
+        <p class="task-name">{{ group.name }}</p>
+        <button class="task-button drop-task" onclick="window.location.href='/tasks?gid={{group.id}}'">
+            <i class="fa fa-eye"></i>
+        </button>
+        <form action="leave" method="GET">
+            <input type="hidden" name="gid" value="{{ group.id }}">
+            <button class="task-button delete-task">
+                <i class="fa fa-sign-out"></i>
+            </button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<!--  If there are no tasks it tell the user in an alert  -->
+<div class="alert alert-danger">
+    {{alert}}
+</div>
+{% endif %}
+
+{% endblock %}
