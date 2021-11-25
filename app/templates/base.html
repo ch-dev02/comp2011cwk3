@@ -31,12 +31,18 @@
 
     <!--  This outputs any messages sent to the page  -->
     <div class="container-fluid">
-      {% with messages = get_flashed_messages() %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-success">
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+                <div class="alert alert-danger" role="alert">
                 {{ message }}
-          </div>
+                </div>
+            {% else %}
+                <div class="alert alert-success" role="alert">
+                {{ message }}
+                </div>
+            {% endif %}
           {% endfor %}
         {% endif %}
       {% endwith %}

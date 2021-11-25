@@ -40,7 +40,7 @@ def create_task():
         groups.append(temp)
 
     if len(UserGroups) == 0:
-        flash('You must join a group before creating a task', 'danger')
+        flash('You must join a group before creating a task', 'error')
         app.logger.error('User %d tried to create a task without joining a group', current_user.id)
         return redirect('/create_group')
     form.group.choices = [(g.id, g.name) for g in groups]
@@ -63,7 +63,7 @@ def create_group():
     if request.method == 'POST' and form.validate():
         taken = models.Group.query.filter_by(code=form.code.data).first()
         if taken:
-            flash('Group Code Taken')
+            flash('Group Code Taken', 'error')
             return render_template('create_group.html',
                                    title='To-Do | Create A Group',
                                    form=form)
@@ -90,12 +90,12 @@ def tasks():
     user = models.User.query.filter_by(id=current_user.id).first()
     ug = models.UserGroup.query.filter_by(group_id=gid,user_id=user.id).first()
     if not ug:
-        flash('You are not a member of this group')
+        flash('You are not a member of this group', 'error')
         app.logger.warning("Requested List of Tasks for group: " + str(gid) + " but user: " + str(user.username) + " is not a member of this group")
         return redirect('/')
     group = models.Group.query.filter_by(id=gid).first()
     if not group:
-        flash('Group Not Found')
+        flash('Group Not Found', 'error')
         app.logger.error("Requested List of Tasks for group: " + str(gid) + " but group does not exist")
         return redirect('/')
     tasks = models.Task.query.filter_by(group_id=gid).all()
@@ -121,7 +121,7 @@ def mark_complete():
     t = models.Task.query.get(task_id)
     ug = models.UserGroup.query.filter_by(group_id=t.group_id,user_id=current_user.id).first()
     if not ug:
-        flash('You are not a member of this group')
+        flash('You are not a member of this group', 'error')
         app.logger.warning("Requested to mark task: " + str(task_id) + " as complete but user: " + str(current_user.username) + " is not a member of this group")
         return redirect('/')
     t.complete = True
@@ -140,7 +140,7 @@ def delete():
     t = models.Task.query.get(task_id)
     ug = models.UserGroup.query.filter_by(group_id=t.group_id,user_id=current_user.id).first()
     if not ug:
-        flash('You are not a member of this group')
+        flash('You are not a member of this group', 'error')
         app.logger.warning("Requested to delete task: " + str(task_id) + " but user: " + str(current_user.username) + " is not a member of this group")
         return redirect('/')
     db.session.delete(t)
@@ -154,14 +154,14 @@ def join():
     if request.method == 'POST' and form.validate():
         exist = models.Group.query.filter_by(code=form.code.data).first()
         if not exist:
-            flash('Group Code Not Found')
+            flash('Group Code Not Found', 'error')
             app.logger.warning("Requested to join group: " + str(form.code.data) + " but group does not exist")
             return render_template('join_group.html',
                                    title='To-Do | Join A Group',
                                    form=form)
         ug = models.UserGroup.query.filter_by(group_id=exist.id,user_id=current_user.id).first()
         if ug:
-            flash('You are already a member of this group')
+            flash('You are already a member of this group', 'error')
             app.logger.warning("Requested to join group: " + str(form.code.data) + " but user: " + str(current_user.username) + " is already a member of this group")
             return render_template('join_group.html',
                                       title='To-Do | Join A Group',
@@ -184,7 +184,7 @@ def leave():
     gid = request.args["gid"]
     ug = models.UserGroup.query.filter_by(group_id=gid,user_id=current_user.id).first()
     if not ug:
-        flash('You are not a member of this group')
+        flash('You are not a member of this group', 'error')
         app.logger.warning("Requested to leave group: " + str(gid) + " but user: " + str(current_user.username) + " is not a member of this group")
         return redirect('/')
     db.session.delete(ug)

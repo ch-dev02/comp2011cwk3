@@ -96,6 +96,12 @@ p{
     width: 100%;
 }
 
+.container-fluid > .ls-form {
+    max-width: 500px;
+    margin: auto;
+    width: 100%;
+}
+
 .container-fluid > .create-form #description{
     height: 125px;
 }

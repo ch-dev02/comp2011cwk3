@@ -28,7 +28,7 @@ def login_post():
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.', 'error')
         app.logger.error('Attempted Login with incorrect details')
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
 
@@ -53,7 +53,7 @@ def signup_post():
     user = models.User.query.filter_by(username=username).first() # if this returns a user, then the email already exists in database
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again
-        flash('Username already exists')
+        flash('Username already exists', 'error')
         app.logger.error('Attempted Sign Up when username taken')
         return redirect(url_for('auth.signup'))
 
@@ -84,7 +84,7 @@ def change_pwd():
     user = models.User.query.filter_by(username=current_user.username).first()
 
     if not user or not check_password_hash(user.password, old):
-        flash('Incorrect password')
+        flash('Incorrect password', 'error')
         app.logger.error('Attempted to change password with incorrect password')
         return redirect(url_for('auth.profile'))
     
