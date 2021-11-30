@@ -148,6 +148,18 @@ p{
     width: 98%;
 }
 
+#toggle-dark-form{
+    max-width: 300px;
+    margin: auto;
+    width: 98%;
+    margin-top: 70px;
+}
+
+#toggle-dark-btn{
+    width: 100%;
+    line-height: 2;
+}
+
 #change-pwd-btn{
     width: 100%;
     line-height: 2;
